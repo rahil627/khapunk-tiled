@@ -74,25 +74,22 @@ public function createMap()
 If you want to animate certain tiles add the following properties to a tile:
 	
 ~~~~
-animlength -> the animation length ( type int)
-speed	   -> the rate at which tiles should animate ( type int)
-reverse    -> Whether the animation should play backwards ( type bool > "true"/"false")
+GiD properties:
+animlength  -> the animation length ( type int)
+speed	    -> the rate at which tiles should animate ( type int )
+reverse     -> (optional)Whether the animation should play backwards ( type bool )
+vertical    -> (optional)Whether the animation is set in vertical order on the tileset ( type bool )
+animchildren-> (optional)Whether the tiles part of the sequence should animate too ( type bool )*
 ~~~~  
+  
+~~~~
+Layer properties:
+animated    -> Whether the layer contains animated tiles ( type bool )
+~~~~    
   
 [A][B][C][D]  
 Given the above tileset, the properties are applied to tile A. The length in this case is 4 ( A included ).  
-Over time, depending on speed, A will change to B >  C > D and back to it's original graphic. B,C,and D do not animate.  
-To do that read the following:  
-  
-[A][B][C]  
-For the this given sequence we can do the following:  
-A is the parent of the animation sequence. For this tile you set the 3 properties as described above.  
-Tile B and C are child tiles to A. To animate these tiles with the right offset add a property **parent** to tile B and C.  
-The value of this property must be the difference in offset to the parent. So for B the value is 1. For C the value is 2.  
- 
-Lastly add a property **animated** of value bool to your layer.  
-  
-For tiles animated vertical give the parent tile property **vertical** of value bool.
+Over time, depending on speed, A will change to B >  C > D and back to it's original graphic. B,C,and D do not animate unless animchildren is set.  
   
 Note:  
 The tiles must be placed in sequence on your tileset as the animation depends on the length and index position. I might consider a more dynamic approach.  

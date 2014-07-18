@@ -101,22 +101,22 @@ public function new(mapData:Map)
 						var vertical:Bool =  map.getGidProperty(gid + 1, "vertical") == "true";
 						tilemap.addAnimatedTile(gid, length, speed, reverse, vertical);
 						
-					}
-					if (map.getGidProperty(gid + 1, "parent") != null) {
-						
-						var offset:Int;
-						var parent:Int;
-						
-						offset = Std.parseInt(map.getGidProperty(gid + 1, "parent"));
-						if ((map.getGidProperty(gid + 1, "vertical") == "true")) {
-							parent = gid - offset * tilemap.tileRows();
+						if (map.getGidProperty(gid + 1, "animchildren") == "true")
+						{
+							for (i in 0...length)
+							{
+								var child:Int;
+								if (vertical) {
+									child = gid + i * tilemap.tileRows();
+								}
+								else child = gid + i;
+								
+								tilemap.addChildTile(child,gid);
+							}
 						}
-						else parent = gid - offset;
 						
-						tilemap.addChildTile(gid, parent);
 					}
 					animCheck[gid] = true;
-					
 				}
 			}
 			addGraphic(tilemap);
