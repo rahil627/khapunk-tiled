@@ -77,6 +77,9 @@ public function new(mapData:Map)
 			var tilemap = new Tilemap(tileset, map.fullWidth, map.fullHeight, map.tileWidth, map.tileHeight, spacing, spacing);
 			tilemap.hasAnimations = layer.properties.resolve("animated") == "true" ? true:false;
 			
+			var animCheck:Array<Bool> = new Array<Bool>();
+		
+			
 			// Loop through tile layer ids
 			for (row in 0...layer.height)
 			{
@@ -84,20 +87,36 @@ public function new(mapData:Map)
 				{
 					gid = layer.tileGIDs[row][col] - 1;
 					
+					if (skip == null || Lambda.has(skip, gid) == false){
+						tilemap.setTile(col, row, gid);
+					}
+					
+					
+					if (animCheck[gid] == true) continue;
 					if (map.getGidProperty(gid + 1, "animlength") != null) {
 						
 						var length:Int = Std.parseInt(map.getGidProperty(gid+1, "animlength"));
 						var speed:Int =  Std.parseInt(map.getGidProperty(gid+1, "speed"));
-						var reverse:Bool =  map.getGidProperty(gid+1, "reverse") == "true";
-						tilemap.addAnimatedTile(gid, length, speed, reverse);
+						var reverse:Bool =  map.getGidProperty(gid + 1, "reverse") == "true";
+						var vertical:Bool =  map.getGidProperty(gid + 1, "vertical") == "true";
+						tilemap.addAnimatedTile(gid, length, speed, reverse, vertical);
+						
 					}
 					if (map.getGidProperty(gid + 1, "parent") != null) {
-						var parentPos:Int = Std.parseInt(map.getGidProperty(gid + 1, "parent"));
-						tilemap.addChildTile(gid, parentPos);
+						
+						var offset:Int;
+						var parent:Int;
+						
+						offset = Std.parseInt(map.getGidProperty(gid + 1, "parent"));
+						if ((map.getGidProperty(gid + 1, "vertical") == "true")) {
+							parent = gid - offset * tilemap.tileRows();
+						}
+						else parent = gid - offset;
+						
+						tilemap.addChildTile(gid, parent);
 					}
-					if (skip == null || Lambda.has(skip, gid) == false){
-						tilemap.setTile(col, row, gid);
-					}
+					animCheck[gid] = true;
+					
 				}
 			}
 			addGraphic(tilemap);

@@ -92,11 +92,11 @@ The value of this property must be the difference in offset to the parent. So fo
  
 Lastly add a property **animated** of value bool to your layer.  
   
+For tiles animated vertical give the parent tile property **vertical** of value bool.
+  
 Note:  
 The tiles must be placed in sequence on your tileset as the animation depends on the length and index position. I might consider a more dynamic approach.  
 Currently it only works for Gridmaps and not Slopedmaps.
-  
-Only Horizontal sequences supported for now.
 
 ### Thanks to ###
 
