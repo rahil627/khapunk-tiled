@@ -90,7 +90,8 @@ A is the parent of the animation sequence. For this tile you set the 3 propertie
 Tile B and C are child tiles to A. To animate these tiles with the right offset add a property **parent** to tile B and C.  
 The value of this property must be the difference in offset to the parent. So for B the value is 1. For C the value is 2.  
  
-
+Lastly add a property **animated** of value bool to your layer.  
+  
 Note:  
 The tiles must be placed in sequence on your tileset as the animation depends on the length and index position. I might consider a more dynamic approach.  
 Currently it only works for Gridmaps and not Slopedmaps.

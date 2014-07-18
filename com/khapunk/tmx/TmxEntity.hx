@@ -75,6 +75,7 @@ public function new(mapData:Map)
 			var spacing = map.getTileMapSpacing(name);
 			
 			var tilemap = new Tilemap(tileset, map.fullWidth, map.fullHeight, map.tileWidth, map.tileHeight, spacing, spacing);
+			tilemap.hasAnimations = layer.properties.resolve("animated") == "true" ? true:false;
 			
 			// Loop through tile layer ids
 			for (row in 0...layer.height)
