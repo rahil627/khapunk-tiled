@@ -90,6 +90,10 @@ public function new(mapData:Map)
 						var reverse:Bool =  map.getGidProperty(gid+1, "reverse") == "true";
 						tilemap.addAnimatedTile(gid, length, speed, reverse);
 					}
+					if (map.getGidProperty(gid + 1, "parent") != null) {
+						var parentPos:Int = Std.parseInt(map.getGidProperty(gid + 1, "parent"));
+						tilemap.addChildTile(gid, parentPos);
+					}
 					if (skip == null || Lambda.has(skip, gid) == false){
 						tilemap.setTile(col, row, gid);
 					}
