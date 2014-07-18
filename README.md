@@ -69,6 +69,20 @@ public function createMap()
 }
 ```
 
+### Animated tiles ###
+
+If you want to animate certain tiles add the following properties:
+	
+~~~~
+animlength -> the animation length ( type int)
+speed	   -> the rate at which tiles should animate ( type int)
+reverse    -> Whether the animation should play backwards ( type bool > "true"/"false")
+~~~~  
+  
+Note:  
+The tiles must be placed in sequence on your tileset as the animation depends on the length and index position. I might consider a more dynamic approach.  
+Currently it only works for Gridmaps and not Slopedmaps 
+
 ### Thanks to ###
 
 [Matt Tuttle](https://github.com/MattTuttle) for writing the original

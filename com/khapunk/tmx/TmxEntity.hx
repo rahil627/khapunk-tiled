@@ -73,18 +73,24 @@ public function new(mapData:Map)
 			}
 			layer = map.layers.get(name);
 			var spacing = map.getTileMapSpacing(name);
-
+			
 			var tilemap = new Tilemap(tileset, map.fullWidth, map.fullHeight, map.tileWidth, map.tileHeight, spacing, spacing);
-
+			
 			// Loop through tile layer ids
 			for (row in 0...layer.height)
 			{
 				for (col in 0...layer.width)
 				{
 					gid = layer.tileGIDs[row][col] - 1;
-					if (gid < 0) continue;
-					if (skip == null || Lambda.has(skip, gid) == false)
-					{
+					
+					if (map.getGidProperty(gid + 1, "animlength") != null) {
+						
+						var length:Int = Std.parseInt(map.getGidProperty(gid+1, "animlength"));
+						var speed:Int =  Std.parseInt(map.getGidProperty(gid+1, "speed"));
+						var reverse:Bool =  map.getGidProperty(gid+1, "reverse") == "true";
+						tilemap.addAnimatedTile(gid, length, speed, reverse);
+					}
+					if (skip == null || Lambda.has(skip, gid) == false){
 						tilemap.setTile(col, row, gid);
 					}
 				}
