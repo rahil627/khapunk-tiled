@@ -35,7 +35,7 @@ class TmxLayer
 		width = Std.parseInt(source.att.width); 
 		height = Std.parseInt(source.att.height); 
 		visible = (source.has.visible && source.att.visible == "1") ? true : false;
-		opacity = (source.has.opacity) ? Std.parseFloat(source.att.opacity) : 0;
+		opacity = (source.has.opacity) ? Std.parseFloat(source.att.opacity) : 1;
 		
 		//load properties
 		var node:Fast;

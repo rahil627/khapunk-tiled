@@ -79,12 +79,14 @@ animlength  -> the animation length ( type int)
 speed	    -> the rate at which tiles should animate ( type int )
 reverse     -> (optional)Whether the animation should play backwards ( type bool )
 vertical    -> (optional)Whether the animation is set in vertical order on the tileset ( type bool )
-animchildren-> (optional)Whether the tiles part of the sequence should animate too ( type bool )*
+animchildren-> (optional)Whether the tiles part of the sequence should animate too ( type bool )
 ~~~~  
   
 ~~~~
 Layer properties:
-animated    -> Whether the layer contains animated tiles ( type bool )
+local    -> Whether the tile animations should be managed by the entity update instead of 
+			the global tile animation manager. The entity will not share its animation
+			with global animation manager.
 ~~~~    
   
 [A][B][C][D]  

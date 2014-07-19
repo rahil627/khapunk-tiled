@@ -2,6 +2,7 @@ package com.khapunk.tmx;
 import com.khapunk.Entity;
 import com.khapunk.graphics.PunkImage;
 import com.khapunk.graphics.Tilemap;
+import com.khapunk.graphics.tilemap.TileAnimationManager;
 import com.khapunk.masks.Grid;
 import com.khapunk.masks.Masklist;
 import com.khapunk.masks.SlopedGrid;
@@ -61,6 +62,7 @@ public function new(mapData:Map)
 	
 	public function loadGraphic(tileset:String, layerNames:Array<String>, skip:Array<Int> = null)
 	{
+		
 		var gid:Int, layer:TmxLayer;
 		for (name in layerNames)
 		{
@@ -71,14 +73,16 @@ public function new(mapData:Map)
 #end
 				continue;
 			}
+			
 			layer = map.layers.get(name);
 			var spacing = map.getTileMapSpacing(name);
 			
 			var tilemap = new Tilemap(tileset, map.fullWidth, map.fullHeight, map.tileWidth, map.tileHeight, spacing, spacing);
-			tilemap.hasAnimations = layer.properties.resolve("animated") == "true" ? true:false;
+			tilemap.alpha = layer.opacity;
 			
-			var animCheck:Array<Bool> = new Array<Bool>();
-		
+			var local = layer.properties.resolve("local") == "true" ? true:false;
+			
+			checkAnimations(tilemap, tileset,local);
 			
 			// Loop through tile layer ids
 			for (row in 0...layer.height)
@@ -86,42 +90,66 @@ public function new(mapData:Map)
 				for (col in 0...layer.width)
 				{
 					gid = layer.tileGIDs[row][col] - 1;
-					
+					if (TileAnimationManager.getLayer(tileset) != null && TileAnimationManager.getLayer(tileset).exists(gid)) {
+						tilemap.hasAnimations = true;
+					}
+					else if (TileAnimationManager.getParentLayer(tileset) != null && TileAnimationManager.getParentLayer(tileset).exists(gid)) {
+						tilemap.hasAnimations = true;
+					}
 					if (skip == null || Lambda.has(skip, gid) == false){
 						tilemap.setTile(col, row, gid);
 					}
-					
-					
-					if (animCheck[gid] == true) continue;
-					if (map.getGidProperty(gid + 1, "animlength") != null) {
-						
-						var length:Int = Std.parseInt(map.getGidProperty(gid+1, "animlength"));
-						var speed:Int =  Std.parseInt(map.getGidProperty(gid+1, "speed"));
-						var reverse:Bool =  map.getGidProperty(gid + 1, "reverse") == "true";
-						var vertical:Bool =  map.getGidProperty(gid + 1, "vertical") == "true";
-						tilemap.addAnimatedTile(gid, length, speed, reverse, vertical);
-						
-						if (map.getGidProperty(gid + 1, "animchildren") == "true")
-						{
-							for (i in 0...length)
-							{
-								var child:Int;
-								if (vertical) {
-									child = gid + i * tilemap.tileRows();
-								}
-								else child = gid + i;
-								
-								tilemap.addChildTile(child,gid);
-							}
-						}
-						
-					}
-					animCheck[gid] = true;
 				}
 			}
+		
 			addGraphic(tilemap);
+			
 		}
 	}
+	
+	function checkAnimations(tilemap:Tilemap,name:String,local:Bool) : Void
+	{
+		var tileset:TmxTileSet;
+		
+		for (i in 0...map.tilesets.length) {
+			tileset = map.tilesets[i];
+			
+			if(name != tileset.name) continue;
+			if (TileAnimationManager.layerExists(name) && !local) {
+				tilemap.initAnims(name, false);
+				continue;
+			};
+			tilemap.initAnims(name, local);
+			var numTiles = tilemap.tileRows() * tilemap.tileColumn();
+			
+			for (id in 0...numTiles)
+			{
+					if (tileset.getProperties(id) != null && tileset.getProperties(id).resolve("animlength") != null) {
+					
+					var length:Int = Std.parseInt(tileset.getProperties(id).resolve("animlength"));
+					var speed:Int =  Std.parseInt(tileset.getProperties(id).resolve("speed"));
+					var reverse:Bool = tileset.getProperties(id).resolve("reverse") == "true";
+					var vertical:Bool =  tileset.getProperties(id).resolve("vertical") == "true";
+					tilemap.addAnimatedTile(id, length, speed, reverse, vertical, name);
+					
+					if (tileset.getProperties(id).resolve("animchildren") == "true")
+					{
+						for (k in 0...length)
+						{
+							var child:Int;
+							if (vertical) {
+								child = id + k * tilemap.tileRows();
+							}
+							else child = id + k;
+							
+							tilemap.addChildTile(child,id,name);
+						}
+					}
+				}
+			}
+		}
+	}
+	
 	
 	public function loadMask(collideLayer:String = "collide", typeName:String = "solid", skip:Array<Int> = null)
 	{
