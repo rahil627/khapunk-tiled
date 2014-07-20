@@ -77,9 +77,10 @@ If you want to animate certain tiles add the following properties to a tile:
 GiD properties:
 animlength  -> the animation length ( type int)
 speed	    -> the rate at which tiles should animate ( type int )
+animchildren-> (optional)Whether the tiles part of the sequence should animate too ( type bool )
+offset		-> (optional)Use this if the animation sequence is spaced. (type int)
 reverse     -> (optional)Whether the animation should play backwards ( type bool )
 vertical    -> (optional)Whether the animation is set in vertical order on the tileset ( type bool )
-animchildren-> (optional)Whether the tiles part of the sequence should animate too ( type bool )
 ~~~~  
   
 ~~~~

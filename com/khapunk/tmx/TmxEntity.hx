@@ -90,12 +90,19 @@ public function new(mapData:Map)
 				for (col in 0...layer.width)
 				{
 					gid = layer.tileGIDs[row][col] - 1;
-					if (TileAnimationManager.getLayer(tileset) != null && TileAnimationManager.getLayer(tileset).exists(gid)) {
+					
+					if (tilemap.localAnim)
+					{
+						if (tilemap.animations.get(gid) != null || tilemap.parentAnim.get(gid) != null)
 						tilemap.hasAnimations = true;
 					}
-					else if (TileAnimationManager.getParentLayer(tileset) != null && TileAnimationManager.getParentLayer(tileset).exists(gid)) {
-						tilemap.hasAnimations = true;
+					else {
+						if (TileAnimationManager.getLayer(tileset) != null && TileAnimationManager.getLayer(tileset).exists(gid) ||
+						TileAnimationManager.getParentLayer(tileset) != null && TileAnimationManager.getParentLayer(tileset).exists(gid)) {
+							tilemap.hasAnimations = true;
+						}
 					}
+					
 					if (skip == null || Lambda.has(skip, gid) == false){
 						tilemap.setTile(col, row, gid);
 					}
@@ -120,17 +127,19 @@ public function new(mapData:Map)
 				continue;
 			};
 			tilemap.initAnims(name, local);
-			var numTiles = tilemap.tileRows() * tilemap.tileColumn();
+			var numTiles = tilemap.numRowInTileset() * tilemap.numColInTileset();
 			
 			for (id in 0...numTiles)
 			{
-					if (tileset.getProperties(id) != null && tileset.getProperties(id).resolve("animlength") != null) {
-					
+				if (tileset.getProperties(id) != null && tileset.getProperties(id).resolve("animlength") != null) {
+				
 					var length:Int = Std.parseInt(tileset.getProperties(id).resolve("animlength"));
 					var speed:Int =  Std.parseInt(tileset.getProperties(id).resolve("speed"));
 					var reverse:Bool = tileset.getProperties(id).resolve("reverse") == "true";
 					var vertical:Bool =  tileset.getProperties(id).resolve("vertical") == "true";
-					tilemap.addAnimatedTile(id, length, speed, reverse, vertical, name);
+					var offset:Int =  tileset.getProperties(id).has("offset") ? Std.parseInt(tileset.getProperties(id).resolve("offset")):0; 
+					
+					tilemap.addAnimatedTile(id, length, speed, reverse, vertical,offset, name);
 					
 					if (tileset.getProperties(id).resolve("animchildren") == "true")
 					{
@@ -138,9 +147,9 @@ public function new(mapData:Map)
 						{
 							var child:Int;
 							if (vertical) {
-								child = id + k * tilemap.tileRows();
+								child = id + k * tilemap.numColInTileset() + offset;
 							}
-							else child = id + k;
+							else child = id + k + offset;
 							
 							tilemap.addChildTile(child,id,name);
 						}
