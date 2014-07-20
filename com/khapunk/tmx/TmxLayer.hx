@@ -5,8 +5,15 @@ import haxe.io.BytesData;
 import haxe.io.BytesInput;
 import haxe.io.BytesOutput;
 import haxe.xml.Fast;
+
+#if(cpp || android)
+import cpp.zip.Uncompress;
+#else
 import haxe.zip.Uncompress;
+#end
+
 import kha.Blob;
+
 
 /**
  * ...
@@ -141,11 +148,7 @@ class TmxLayer
 		var data:Bytes = base64ToBytes(chunk);
 		if(compressed)
 		{
-			//#if (js && !format)
-			//throw "Need the format library to use compressed map on html5";
-			//#else 
 			data = Uncompress.run(data, data.length);
-			//#end
 		}
 		
 		var bytesInput:BytesInput = new BytesInput(data, 0, data.length);
