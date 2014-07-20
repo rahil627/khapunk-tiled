@@ -6,11 +6,7 @@ import haxe.io.BytesInput;
 import haxe.io.BytesOutput;
 import haxe.xml.Fast;
 
-#if(cpp || android)
-import cpp.zip.Uncompress;
-#else
 import haxe.zip.Uncompress;
-#end
 
 import kha.Blob;
 

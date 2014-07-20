@@ -97,6 +97,12 @@ Note:
 The tiles must be placed in sequence on your tileset as the animation depends on the length and index position. I might consider a more dynamic approach.  
 Currently it only works for Gridmaps and not Slopedmaps.
 
+### bugs ###
+Loading TMX files that are compressed will not work properly on windows/android unless you delete the following folder in your kha folder:  
+~~~~
+Kha/Tools/haxe/std/cpp/_std/haxe/zip/
+~~~~
+
 ### Thanks to ###
 
 [Matt Tuttle](https://github.com/MattTuttle) for writing the original
