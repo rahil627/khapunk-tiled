@@ -7,6 +7,7 @@ import com.khapunk.masks.Grid;
 import com.khapunk.masks.Masklist;
 import com.khapunk.masks.SlopedGrid;
 import com.khapunk.tmx.TmxMap.MapData;
+import com.khapunk.tmx.TmxTileSet.TMXAnimation;
 import kha.Blob;
 import kha.Loader;
 
@@ -117,6 +118,7 @@ public function new(mapData:Map)
 	function checkAnimations(tilemap:Tilemap,name:String,local:Bool) : Void
 	{
 		var tileset:TmxTileSet;
+		var animation:TMXAnimation;
 		
 		for (i in 0...map.tilesets.length) {
 			tileset = map.tilesets[i];
@@ -131,7 +133,22 @@ public function new(mapData:Map)
 			
 			for (id in 0...numTiles)
 			{
-				if (tileset.getProperties(id) != null && tileset.getProperties(id).resolve("animlength") != null) {
+				animation = tileset.getAnimation(id);
+				
+				if(animation != null)
+				{
+					
+					var reverse:Bool =  tileset.getProperties(id).has("revers") ? (tileset.getProperties(id).resolve("revers") == "true"):false;
+					var speed:Int =  tileset.getProperties(id).has("speed") ? Std.parseInt(tileset.getProperties(id).resolve("speed")):1;
+					//	tilemap.addAnimatedTile(id, length, speed, reverse, vertical,offset, name);
+					tilemap.addAnimatedTile(id, animation.tiles, animation.durations,name,speed, reverse);
+					
+					for (i in 1...animation.tiles.length)
+					{
+						tilemap.addChildTile(animation.tiles[i], id, name);
+					}
+				}
+				/*if (tileset.getProperties(id) != null && tileset.getProperties(id).resolve("animlength") != null) {
 				
 					var length:Int = Std.parseInt(tileset.getProperties(id).resolve("animlength"));
 					var speed:Int =  Std.parseInt(tileset.getProperties(id).resolve("speed"));
@@ -154,7 +171,7 @@ public function new(mapData:Map)
 							tilemap.addChildTile(child,id,name);
 						}
 					}
-				}
+				}*/
 			}
 		}
 	}

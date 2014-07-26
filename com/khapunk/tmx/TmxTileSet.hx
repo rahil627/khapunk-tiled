@@ -31,6 +31,8 @@ class TmxTileSet
 	private var _tileProps:Array<TmxPropertySet>;
 	private var _image:Image;
 
+	private var _animations:Map<Int,TMXAnimation>;
+	
 	public var firstGID:Int;
 	public var name:String;
 	public var tileWidth:Int;
@@ -54,6 +56,8 @@ class TmxTileSet
 
 		firstGID = (source.has.firstgid) ? Std.parseInt(source.att.firstgid) : 1;
 
+		_animations = new Map<Int,TMXAnimation>();
+		
 		// check for external source
 		if (source.has.source)
 		{
@@ -78,8 +82,21 @@ class TmxTileSet
 				{
 					var id:Int = Std.parseInt(node.att.id);
 					_tileProps[id] = new TmxPropertySet();
-					for (prop in node.nodes.properties)
+					for (prop in node.nodes.properties){
 						_tileProps[id].extend(prop);
+					}
+					for (anim in node.nodes.animation) {
+						
+						var frame:Fast;
+						var an:TMXAnimation = new TMXAnimation();
+						for (frame in anim.nodes.frame)
+						{
+							an.tiles.push(Std.parseInt(frame.att.tileid));
+							an.durations.push(Std.parseFloat(frame.att.duration)/1000);
+							_animations.set(id, an);
+							
+						}
+					}
 				}
 			}
 		}
@@ -131,6 +148,24 @@ class TmxTileSet
 	{
 		//TODO: consider spacing & margin
 		return new Rectangle((id % numCols) * tileWidth, (id / numCols) * tileHeight,0,0);
+	}
+	
+	public function getAnimation(id:Int): TMXAnimation
+	{
+		if(_animations.exists(id))
+		return _animations.get(id);
+		return null;
+	}
+ 
+}
+
+class TMXAnimation {
+	public var tiles:Array<Int>;
+	public var durations:Array<Float>;
+
+	public function new() {
+		tiles = new Array<Int>();
+		durations = new Array<Float>();
 	}
 	
 }

@@ -71,16 +71,13 @@ public function createMap()
 
 ### Animated tiles ###
 
-If you want to animate certain tiles add the following properties to a tile:
+Animations are handled by the Animation editor in Tiled. In addition add these properties if you want to change speed
+and animation direction.
 	
 ~~~~
 GiD properties:
-animlength  -> the animation length ( type int)
 speed	    -> the rate at which tiles should animate ( type int )
-animchildren-> (optional)Whether the tiles part of the sequence should animate too ( type bool )
-offset		-> (optional)Use this if the animation sequence is spaced. (type int)
 reverse     -> (optional)Whether the animation should play backwards ( type bool )
-vertical    -> (optional)Whether the animation is set in vertical order on the tileset ( type bool )
 ~~~~  
   
 ~~~~
@@ -88,15 +85,7 @@ Layer properties:
 local    -> Whether the tile animations should be managed by the entity update instead of 
 			the global tile animation manager. The entity will not share its animation
 			with global animation manager.
-~~~~    
-  
-[A][B][C][D]  
-Given the above tileset, the properties are applied to tile A. The length in this case is 4 ( A included ).  
-Over time, depending on speed, A will change to B >  C > D and back to it's original graphic. B,C,and D do not animate unless animchildren is set.  
-  
-Note:  
-The tiles must be placed in sequence on your tileset as the animation depends on the length and index position. I might consider a more dynamic approach.  
-Currently it only works for Gridmaps and not Slopedmaps.
+~~~~ 
 
 ### bugs ###
 Loading TMX files that are compressed will not work properly on windows/android unless you delete the following folder in your kha folder:  
