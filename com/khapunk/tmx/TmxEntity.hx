@@ -1,5 +1,6 @@
 package com.khapunk.tmx;
 import com.khapunk.Entity;
+import com.khapunk.graphics.atlas.TileAtlas;
 import com.khapunk.graphics.PunkImage;
 import com.khapunk.graphics.Tilemap;
 import com.khapunk.graphics.tilemap.TileAnimationManager;
@@ -37,6 +38,7 @@ class TmxEntity extends Entity
 
 	public var map:TmxMap;
 	public var debugObjectMask:Bool;
+	public var tileAtlas:TileAtlas;
 	
 public function new(mapData:Map)
 	{
@@ -61,10 +63,13 @@ public function new(mapData:Map)
 		addGraphic(new PunkImage(map.imageLayers.get(name)));
 	}
 	
-	public function loadGraphic(tileset:String, layerNames:Array<String>, skip:Array<Int> = null)
+	public function loadGraphic(tileset:String, layerNames:Array<String>, skip:Array<Int> = null, tileAtlas:TileAtlas = null, shareAtlas:Bool = true)
 	{
 		
 		var gid:Int, layer:TmxLayer;
+		
+		this.tileAtlas = tileAtlas;
+		
 		for (name in layerNames)
 		{
 			if (map.layers.exists(name) == false)
@@ -77,8 +82,13 @@ public function new(mapData:Map)
 			
 			layer = map.layers.get(name);
 			var spacing = map.getTileMapSpacing(name);
+		
+			if (shareAtlas && this.tileAtlas == null) {
+				this.tileAtlas = new TileAtlas(tileset);
+				this.tileAtlas.prepareTiles(map.tileWidth, map.tileHeight, spacing, spacing);
+			}
 			
-			var tilemap = new Tilemap(tileset, map.fullWidth, map.fullHeight, map.tileWidth, map.tileHeight, spacing, spacing);
+			var tilemap = new Tilemap(shareAtlas ? this.tileAtlas:tileset, map.fullWidth, map.fullHeight, map.tileWidth, map.tileHeight, spacing, spacing);
 			tilemap.alpha = layer.opacity;
 			
 			var local = layer.properties.resolve("local") == "true" ? true:false;
