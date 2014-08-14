@@ -63,12 +63,10 @@ public function new(mapData:Map)
 		addGraphic(new PunkImage(map.imageLayers.get(name)));
 	}
 	
-	public function loadGraphic(tileset:String, layerNames:Array<String>, skip:Array<Int> = null, tileAtlas:TileAtlas = null, shareAtlas:Bool = true)
+	public function loadGraphic(tileset:String, layerNames:Array<String>, skip:Array<Int> = null)
 	{
 		
 		var gid:Int, layer:TmxLayer;
-		
-		this.tileAtlas = tileAtlas;
 		
 		for (name in layerNames)
 		{
@@ -82,13 +80,8 @@ public function new(mapData:Map)
 			
 			layer = map.layers.get(name);
 			var spacing = map.getTileMapSpacing(name);
-		
-			if (shareAtlas && this.tileAtlas == null) {
-				this.tileAtlas = new TileAtlas(tileset);
-				this.tileAtlas.prepareTiles(map.tileWidth, map.tileHeight, spacing, spacing);
-			}
 			
-			var tilemap = new Tilemap(shareAtlas ? this.tileAtlas:tileset, map.fullWidth, map.fullHeight, map.tileWidth, map.tileHeight, spacing, spacing);
+			var tilemap = new Tilemap(tileset, map.fullWidth, map.fullHeight, map.tileWidth, map.tileHeight, spacing, spacing);
 			tilemap.alpha = layer.opacity;
 			
 			var local = layer.properties.resolve("local") == "true" ? true:false;
