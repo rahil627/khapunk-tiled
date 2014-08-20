@@ -31,8 +31,8 @@ class TmxObjectGroup
 		name = source.att.name;
 		x = (source.has.x) ? Std.parseInt(source.att.x) : 0;
 		y = (source.has.y) ? Std.parseInt(source.att.y) : 0;
-		width = Std.parseInt(source.att.width);
-		height = Std.parseInt(source.att.height);
+		width = (source.has.width) ? Std.parseInt(source.att.width) : 0;
+		height = (source.has.width) ? Std.parseInt(source.att.height): 0;
 		visible = (source.has.visible && source.att.visible == "1") ? true : false;
 		opacity = (source.has.opacity) ? Std.parseFloat(source.att.opacity) : 0;
 		
