@@ -22,7 +22,7 @@ private abstract Map(TmxMap)
 	private inline function new(map:TmxMap) this = map;
 	@:to public inline function toMap():TmxMap return this;
 
-	@:from public static inline function fromString(s:String) {
+	@:from public static inline function fromName(s:String) {
 		var blob:Blob = Loader.the.getBlob(s);
 		return new Map(new TmxMap(blob.toString()));
 	}
@@ -31,6 +31,9 @@ private abstract Map(TmxMap)
 
 	@:from public static inline function fromMapData(mapData:MapData)
 		return new Map(new TmxMap(mapData));
+		
+	@:from public static inline function fromBlobData(mapData:Blob)
+		return new Map(new TmxMap(mapData.toString()));
 }
  
 class TmxEntity extends Entity
