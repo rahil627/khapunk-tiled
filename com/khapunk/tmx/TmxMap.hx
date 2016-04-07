@@ -3,7 +3,7 @@ import com.khapunk.tmx.TmxLayer;
 import com.khapunk.tmx.TmxObjectGroup;
 import haxe.xml.Fast;
 import kha.Blob;
-import kha.Loader;
+import kha.Assets;
 
 /**
  * ...
@@ -106,7 +106,7 @@ class TmxMap
 
 	public static function loadFromFile(name:String):TmxMap
 	{
-		return new TmxMap(Loader.the.getBlob(name).toString());
+		return new TmxMap(Reflect.field(Assets.blobs,name).toString());
 	}
 
 	public function getLayer(name:String):TmxLayer

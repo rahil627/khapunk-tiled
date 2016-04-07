@@ -10,7 +10,7 @@ import com.khapunk.masks.SlopedGrid;
 import com.khapunk.tmx.TmxMap.MapData;
 import com.khapunk.tmx.TmxTileSet.TMXAnimation;
 import kha.Blob;
-import kha.Loader;
+import kha.Assets;
 
 /**
  * ...
@@ -23,8 +23,8 @@ private abstract Map(TmxMap)
 	@:to public inline function toMap():TmxMap return this;
 
 	@:from public static inline function fromName(s:String) {
-		var blob:Blob = Loader.the.getBlob(s);
-		return new Map(new TmxMap(blob.toString()));
+		var blob:Blob = Reflect.field(Assets.blobs,s);
+		return new Map(new TmxMap(blob));
 	}
 	@:from public static inline function fromTmxMap(map:TmxMap)
 		return new Map(map);
@@ -33,7 +33,7 @@ private abstract Map(TmxMap)
 		return new Map(new TmxMap(mapData));
 		
 	@:from public static inline function fromBlobData(mapData:Blob)
-		return new Map(new TmxMap(mapData.toString()));
+		return new Map(new TmxMap(mapData));
 }
  
 class TmxEntity extends Entity

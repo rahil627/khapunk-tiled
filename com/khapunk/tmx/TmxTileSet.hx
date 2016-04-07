@@ -6,7 +6,7 @@ package com.khapunk.tmx;
 import com.khapunk.tmx.TmxPropertySet;
 import haxe.xml.Fast;
 import kha.Image;
-import kha.Rectangle;
+import com.khapunk.graphics.Rectangle;
 
 abstract TileSetData(Fast)
 {
